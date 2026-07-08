@@ -173,6 +173,20 @@
     margin:8px 0 0;font-size:11.5px;color:var(--ink-soft);line-height:1.4;
     max-height:32px;overflow:hidden;text-overflow:ellipsis;
   }
+  .card .response{
+    margin:6px 0 0;font-size:11.5px;color:var(--ink);line-height:1.4;
+    background:var(--brand-light);border-radius:6px;padding:6px 8px;
+    max-height:48px;overflow:hidden;
+  }
+  .card .response b{color:var(--brand-dark);font-weight:700;display:block;font-size:10px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px;}
+  .progress-row{display:flex;align-items:center;gap:8px;margin-top:9px;}
+  .progress-track{flex:1;background:var(--bg);border-radius:6px;height:7px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:6px;background:var(--brand);transition:width .2s ease;}
+  .progress-fill.complete{background:var(--con);}
+  .progress-pct{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--ink-soft);width:32px;text-align:right;}
+  .field .pct-row{display:flex;align-items:center;gap:10px;}
+  .field .pct-row input[type=range]{flex:1;accent-color:var(--brand);}
+  .field .pct-row .pct-out{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;width:38px;text-align:right;}
   .status-strip{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:9px 0 0 9px;}
   .col-est .status-strip, .card[data-status=estagnada] .status-strip{background:var(--est);}
   .card[data-status=andamento] .status-strip{background:var(--and);}
@@ -254,7 +268,7 @@
   <header class="topbar">
     <div class="title-block">
       <div class="eyebrow">Superintendência de Recursos Externos · Betim/MG</div>
-      <h1>Quadro KANBAN</h1>
+      <h1>Quadro de Acompanhamento</h1>
       <p>Gestão de tarefas, captações e convênios em andamento</p>
     </div>
     <div class="header-actions">
@@ -314,6 +328,13 @@
       </select>
     </div>
     <div class="field"><label>Andamento atual</label><textarea id="fProgress"></textarea></div>
+    <div class="field"><label>Resposta do responsável — o que já foi feito</label><textarea id="fResponse" placeholder="Descreva o que já foi executado até o momento..."></textarea></div>
+    <div class="field"><label>% de serviço entregue</label>
+      <div class="pct-row">
+        <input type="range" id="fCompletion" min="0" max="100" step="5" value="0">
+        <span class="pct-out" id="fCompletionOut">0%</span>
+      </div>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-danger-ghost" id="btnDelete" style="display:none;">Excluir</button>
       <div class="right">
@@ -342,23 +363,193 @@
 
 <script id="taskData" type="application/json">
 [
- {"id":1,"title":"Chamado rastreabilidade","resp":"Eduarda","deadline":"2026-07-17","status":"andamento","priority":"alta","progress":"O chamado está em fase de elaboração. Estou fazendo os ajustes pós terceira reunião com a Laura."},
- {"id":2,"title":"Chamado transparência","resp":"Eduarda","deadline":"2026-07-10","status":"andamento","priority":"alta","progress":"O chamado está praticamente pronto. Aguardando retorno da Compliance sobre os tópicos de localidade e beneficiário final."},
- {"id":3,"title":"Captação SEPA","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","priority":"media","progress":"Verificar possibilidades de captação para as causas animais (castração, vacinação e educação prioritariamente). Possível via SEMENTE do Ministério Público."},
- {"id":4,"title":"Captação SEMAS","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","priority":"baixa","progress":"Analisar se possui algum canal para captação relacionada à qualificação de profissionais para inserção no mercado de trabalho."},
- {"id":5,"title":"Treinamento Câmara Municipal","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","priority":"baixa","progress":"Assistir aula gravada anterior do Recursos Externos com o Planejamento na Câmara Municipal para elaboração da apresentação."},
- {"id":6,"title":"Organizar Drive Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","priority":"baixa","progress":""},
- {"id":7,"title":"Organizar e-mail Wolney","resp":"Vinicius","deadline":"2026-08-09","status":"estagnada","priority":"media","progress":"Verificar se a TI já disponibilizou os arquivos."},
- {"id":8,"title":"Organizar documentos Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","priority":"baixa","progress":""},
- {"id":9,"title":"Analisar prestações caixa amarela","resp":"Natalia","deadline":"2026-07-10","status":"andamento","priority":"media","progress":""},
- {"id":10,"title":"Plano de trabalho arboriza cidades","resp":"Cinthia","deadline":"2026-08-09","status":"concluida","priority":"baixa","progress":""},
- {"id":11,"title":"Scannear planos de trabalho SMS","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","priority":"baixa","progress":""},
- {"id":12,"title":"Elaborar nova planilha de emendas","resp":"Cinthia","deadline":"2026-08-09","status":"andamento","priority":"media","progress":""},
- {"id":13,"title":"Captação Povos Warao","resp":"Eduarda","deadline":"2026-08-09","status":"andamento","priority":"alta","progress":"Aguardando reunião ACNUR e retorno da VALE."},
- {"id":14,"title":"Proposta: emenda 6880/2026 - SEME","resp":"Eduarda","deadline":"2026-07-15","status":"andamento","priority":"alta","progress":"O pessoal da SEME está elaborando o plano de trabalho para inserção no SNEAELIS."},
- {"id":15,"title":"Gestor responsável","resp":"Vinicius","deadline":"2026-07-15","status":"andamento","priority":"alta","progress":"Levantamento inicial dos gestores responsáveis por cada emenda cadastrada, com coleta das datas de início e término da responsabilidade. Posteriormente inserido no ZEUS."},
- {"id":16,"title":"Fonte do Convênio Convenente","resp":"Vinicius","deadline":"2026-08-31","status":"andamento","priority":"media","progress":"Lucas (SEGEFI) solicitou inserção da fonte dentro dos convênios; não há campo disponível. Aguardando Denise (ABACO) criar o campo."},
- {"id":17,"title":"Acompanhamento dos programas TransfereGov","resp":"Cinthia","deadline":"2026-07-10","status":"andamento","priority":"media","progress":""}
+ {
+  "id": 1,
+  "title": "Chamado rastreabilidade",
+  "resp": "Eduarda",
+  "deadline": "2026-07-17",
+  "status": "andamento",
+  "priority": "alta",
+  "progress": "O chamado está em fase de elaboração. Estou fazendo os ajustes pós terceira reunião com a Laura.",
+  "completion": 60,
+  "response": "Ajustes finais pós terceira reunião com a Laura em andamento."
+ },
+ {
+  "id": 2,
+  "title": "Chamado transparência",
+  "resp": "Eduarda",
+  "deadline": "2026-07-10",
+  "status": "andamento",
+  "priority": "alta",
+  "progress": "O chamado está praticamente pronto. Aguardando retorno da Compliance sobre os tópicos de localidade e beneficiário final.",
+  "completion": 85,
+  "response": "Chamado praticamente concluído; falta retorno da Compliance sobre localidade e beneficiário final."
+ },
+ {
+  "id": 3,
+  "title": "Captação SEPA",
+  "resp": "Eduarda",
+  "deadline": "2026-08-31",
+  "status": "estagnada",
+  "priority": "media",
+  "progress": "Verificar possibilidades de captação para as causas animais (castração, vacinação e educação prioritariamente). Possível via SEMENTE do Ministério Público.",
+  "completion": 10,
+  "response": ""
+ },
+ {
+  "id": 4,
+  "title": "Captação SEMAS",
+  "resp": "Eduarda",
+  "deadline": "2026-08-31",
+  "status": "estagnada",
+  "priority": "baixa",
+  "progress": "Analisar se possui algum canal para captação relacionada à qualificação de profissionais para inserção no mercado de trabalho.",
+  "completion": 10,
+  "response": ""
+ },
+ {
+  "id": 5,
+  "title": "Treinamento Câmara Municipal",
+  "resp": "Eduarda",
+  "deadline": "2026-08-31",
+  "status": "estagnada",
+  "priority": "baixa",
+  "progress": "Assistir aula gravada anterior do Recursos Externos com o Planejamento na Câmara Municipal para elaboração da apresentação.",
+  "completion": 5,
+  "response": ""
+ },
+ {
+  "id": 6,
+  "title": "Organizar Drive Wolney",
+  "resp": "Cinthia",
+  "deadline": "2026-08-09",
+  "status": "estagnada",
+  "priority": "baixa",
+  "progress": "",
+  "completion": 0,
+  "response": ""
+ },
+ {
+  "id": 7,
+  "title": "Organizar e-mail Wolney",
+  "resp": "Vinicius",
+  "deadline": "2026-08-09",
+  "status": "estagnada",
+  "priority": "media",
+  "progress": "Verificar se a TI já disponibilizou os arquivos.",
+  "completion": 15,
+  "response": "Aguardando confirmação da TI sobre disponibilização dos arquivos."
+ },
+ {
+  "id": 8,
+  "title": "Organizar documentos Wolney",
+  "resp": "Cinthia",
+  "deadline": "2026-08-09",
+  "status": "estagnada",
+  "priority": "baixa",
+  "progress": "",
+  "completion": 0,
+  "response": ""
+ },
+ {
+  "id": 9,
+  "title": "Analisar prestações caixa amarela",
+  "resp": "Natalia",
+  "deadline": "2026-07-10",
+  "status": "andamento",
+  "priority": "media",
+  "progress": "",
+  "completion": 40,
+  "response": ""
+ },
+ {
+  "id": 10,
+  "title": "Plano de trabalho arboriza cidades",
+  "resp": "Cinthia",
+  "deadline": "2026-08-09",
+  "status": "concluida",
+  "priority": "baixa",
+  "progress": "",
+  "completion": 100,
+  "response": "Plano de trabalho finalizado e entregue."
+ },
+ {
+  "id": 11,
+  "title": "Scannear planos de trabalho SMS",
+  "resp": "Cinthia",
+  "deadline": "2026-08-09",
+  "status": "estagnada",
+  "priority": "baixa",
+  "progress": "",
+  "completion": 0,
+  "response": ""
+ },
+ {
+  "id": 12,
+  "title": "Elaborar nova planilha de emendas",
+  "resp": "Cinthia",
+  "deadline": "2026-08-09",
+  "status": "andamento",
+  "priority": "media",
+  "progress": "",
+  "completion": 50,
+  "response": ""
+ },
+ {
+  "id": 13,
+  "title": "Captação Povos Warao",
+  "resp": "Eduarda",
+  "deadline": "2026-08-09",
+  "status": "andamento",
+  "priority": "alta",
+  "progress": "Aguardando reunião ACNUR e retorno da VALE.",
+  "completion": 55,
+  "response": "Reunião com ACNUR ainda não realizada; aguardando retorno da VALE."
+ },
+ {
+  "id": 14,
+  "title": "Proposta: emenda 6880/2026 - SEME",
+  "resp": "Eduarda",
+  "deadline": "2026-07-15",
+  "status": "andamento",
+  "priority": "alta",
+  "progress": "O pessoal da SEME está elaborando o plano de trabalho para inserção no SNEAELIS.",
+  "completion": 45,
+  "response": "SEME segue elaborando o plano de trabalho para inserção no SNEAELIS."
+ },
+ {
+  "id": 15,
+  "title": "Gestor responsável",
+  "resp": "Vinicius",
+  "deadline": "2026-07-15",
+  "status": "andamento",
+  "priority": "alta",
+  "progress": "Levantamento inicial dos gestores responsáveis por cada emenda cadastrada, com coleta das datas de início e término da responsabilidade. Posteriormente inserido no ZEUS.",
+  "completion": 40,
+  "response": "Levantamento inicial dos gestores em andamento, com coleta de datas de início/término."
+ },
+ {
+  "id": 16,
+  "title": "Fonte do Convênio Convenente",
+  "resp": "Vinicius",
+  "deadline": "2026-08-31",
+  "status": "andamento",
+  "priority": "media",
+  "progress": "Lucas (SEGEFI) solicitou inserção da fonte dentro dos convênios; não há campo disponível. Aguardando Denise (ABACO) criar o campo.",
+  "completion": 60,
+  "response": "Aguardando Denise (ABACO) criar o campo de fonte no sistema."
+ },
+ {
+  "id": 17,
+  "title": "Acompanhamento dos programas TransfereGov",
+  "resp": "Cinthia",
+  "deadline": "2026-07-10",
+  "status": "andamento",
+  "priority": "media",
+  "progress": "",
+  "completion": 50,
+  "response": ""
+ }
 ]
 </script>
 
@@ -404,7 +595,7 @@ function render(){
     const items = TASKS.filter(t=>t.status===st)
       .filter(t=> !respFilter || t.resp===respFilter)
       .filter(t=> !priorityFilter || t.priority===priorityFilter)
-      .filter(t=> !search || (t.title+t.progress+t.resp).toLowerCase().includes(search))
+      .filter(t=> !search || (t.title+t.progress+t.resp+(t.response||'')).toLowerCase().includes(search))
       .sort((a,b)=> (PRIORITY_RANK[a.priority]??3) - (PRIORITY_RANK[b.priority]??3) || (a.deadline||'9999').localeCompare(b.deadline||'9999'));
     document.querySelector(`.count-pill[data-count=${st}]`).textContent = TASKS.filter(t=>t.status===st).length;
     if(items.length===0){
@@ -426,6 +617,11 @@ function render(){
           <span class="deadline ${overdue?'overdue':''}">${overdue?'⚠ ':''}${fmtDate(t.deadline)}</span>
         </div>
         ${t.progress ? `<p class="progress">${t.progress}</p>` : ''}
+        ${t.response ? `<div class="response"><b>Resposta do responsável</b>${t.response}</div>` : ''}
+        <div class="progress-row">
+          <div class="progress-track"><div class="progress-fill ${(t.completion||0)>=100?'complete':''}" style="width:${t.completion||0}%"></div></div>
+          <span class="progress-pct">${t.completion||0}%</span>
+        </div>
       `;
       card.addEventListener('click', ()=>openModal(t.id));
       card.addEventListener('dragstart', e=>{ card.classList.add('dragging'); e.dataTransfer.setData('text/plain', t.id); });
@@ -464,6 +660,9 @@ function openModal(id){
     document.getElementById('fStatus').value = t.status;
     document.getElementById('fPriority').value = t.priority||'media';
     document.getElementById('fProgress').value = t.progress;
+    document.getElementById('fResponse').value = t.response||'';
+    document.getElementById('fCompletion').value = t.completion||0;
+    document.getElementById('fCompletionOut').textContent = (t.completion||0)+'%';
   } else {
     document.getElementById('modalTitle').textContent = 'Nova tarefa';
     document.getElementById('fTitle').value = '';
@@ -472,6 +671,9 @@ function openModal(id){
     document.getElementById('fStatus').value = 'andamento';
     document.getElementById('fPriority').value = 'media';
     document.getElementById('fProgress').value = '';
+    document.getElementById('fResponse').value = '';
+    document.getElementById('fCompletion').value = 0;
+    document.getElementById('fCompletionOut').textContent = '0%';
   }
   overlay.classList.add('open');
 }
@@ -480,6 +682,10 @@ function closeModal(){ document.getElementById('overlay').classList.remove('open
 document.getElementById('btnNew').addEventListener('click', ()=>openModal(null));
 document.getElementById('btnCancel').addEventListener('click', closeModal);
 document.getElementById('overlay').addEventListener('click', e=>{ if(e.target.id==='overlay') closeModal(); });
+
+document.getElementById('fCompletion').addEventListener('input', e=>{
+  document.getElementById('fCompletionOut').textContent = e.target.value+'%';
+});
 
 document.getElementById('btnSaveTask').addEventListener('click', ()=>{
   const title = document.getElementById('fTitle').value.trim();
@@ -490,7 +696,9 @@ document.getElementById('btnSaveTask').addEventListener('click', ()=>{
     deadline: document.getElementById('fDeadline').value,
     status: document.getElementById('fStatus').value,
     priority: document.getElementById('fPriority').value,
-    progress: document.getElementById('fProgress').value.trim()
+    progress: document.getElementById('fProgress').value.trim(),
+    response: document.getElementById('fResponse').value.trim(),
+    completion: Number(document.getElementById('fCompletion').value)
   };
   if(editingId){
     Object.assign(TASKS.find(t=>t.id===editingId), data);
@@ -522,11 +730,17 @@ function buildReport(){
     .sort((a,b)=> (PRIORITY_RANK[a.priority]??3)-(PRIORITY_RANK[b.priority]??3) || a.deadline.localeCompare(b.deadline));
 
   const altaCount = TASKS.filter(t=>t.priority==='alta').length;
+  const avgCompletion = total ? Math.round(TASKS.reduce((s,t)=>s+(t.completion||0),0)/total) : 0;
   let html = `<div class="kpi-grid">
     <div class="kpi"><div class="n">${total}</div><div class="l">Total</div></div>
     <div class="kpi"><div class="n" style="color:var(--pr-alta)">${altaCount}</div><div class="l">Prioridade alta</div></div>
     <div class="kpi"><div class="n" style="color:var(--danger)">${overdue.length}</div><div class="l">Atrasadas</div></div>
   </div>`;
+
+  html += `<h4>Progresso médio geral</h4>
+    <div class="bar-row"><span class="bar-label">Entregue</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${avgCompletion}%;background:var(--brand)"></span></span>
+      <span class="bar-num">${avgCompletion}%</span></div>`;
 
   html += `<h4>Por situação</h4>`;
   Object.keys(STATUS_LABEL).forEach(st=>{
@@ -552,6 +766,15 @@ function buildReport(){
     html += `<div class="bar-row"><span class="bar-label">${r}</span>
       <span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:var(--brand)"></span></span>
       <span class="bar-num">${n}</span></div>`;
+  });
+
+  html += `<h4>Progresso médio por responsável</h4>`;
+  Object.keys(byResp).sort().forEach(r=>{
+    const tasksOf = TASKS.filter(t=>(t.resp||'Sem responsável')===r);
+    const avg = Math.round(tasksOf.reduce((s,t)=>s+(t.completion||0),0)/tasksOf.length);
+    html += `<div class="bar-row"><span class="bar-label">${r}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${avg}%;background:var(--brand)"></span></span>
+      <span class="bar-num">${avg}%</span></div>`;
   });
 
   html += `<h4>Tarefas atrasadas (${overdue.length})</h4>`;
@@ -581,9 +804,9 @@ document.getElementById('backdrop').addEventListener('click', closeReport);
 document.getElementById('btnPrint').addEventListener('click', ()=> window.print());
 
 document.getElementById('btnExportCsv').addEventListener('click', ()=>{
-  const rows = [['Ref','Tarefa','Responsável','Prioridade','Prazo','Situação','Andamento atual']];
+  const rows = [['Ref','Tarefa','Responsável','Prioridade','Prazo','Situação','% Entregue','Andamento atual','Resposta do responsável']];
   [...TASKS].sort((a,b)=> (PRIORITY_RANK[a.priority]??3)-(PRIORITY_RANK[b.priority]??3) || (a.deadline||'9999').localeCompare(b.deadline||'9999'))
-    .forEach(t=> rows.push([`TAR-${String(t.id).padStart(3,'0')}`, t.title, t.resp, PRIORITY_LABEL[t.priority]||'—', fmtDate(t.deadline), STATUS_LABEL[t.status], (t.progress||'').replace(/\n/g,' ')]));
+    .forEach(t=> rows.push([`TAR-${String(t.id).padStart(3,'0')}`, t.title, t.resp, PRIORITY_LABEL[t.priority]||'—', fmtDate(t.deadline), STATUS_LABEL[t.status], `${t.completion||0}%`, (t.progress||'').replace(/\n/g,' '), (t.response||'').replace(/\n/g,' ')]));
   const csv = rows.map(r=> r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n');
   const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
