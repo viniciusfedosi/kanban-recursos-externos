@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recursos Externos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF2F1;
+    --surface:#FFFFFF;
+    --ink:#132A26;
+    --ink-soft:#5B6E6A;
+    --line:#DCE5E2;
+    --brand:#0F6E5D;
+    --brand-dark:#0B5346;
+    --brand-light:#E3F2EE;
+    --est:#B5540E;      /* estagnada */
+    --est-bg:#FDF0E4;
+    --and:#1D4ED8;      /* em andamento */
+    --and-bg:#E9EFFE;
+    --con:#157A45;      /* concluída */
+    --con-bg:#E5F5EC;
+    --danger:#C0362C;
+    --danger-bg:#FBEAE8;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1400px;margin:0 auto;padding:28px 32px 60px;}
+
+  /* ---------- Header ---------- */
+  header.topbar{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    flex-wrap:wrap;gap:16px;
+    margin-bottom:22px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:16px;
+  }
+  .title-block .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--brand-dark);font-weight:500;margin-bottom:6px;
+  }
+  .title-block h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:28px;font-weight:700;margin:0;color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .title-block p{margin:4px 0 0;color:var(--ink-soft);font-size:13.5px;}
+  .header-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  button{font-family:'Inter',sans-serif;cursor:pointer;border:none;}
+  .btn{
+    padding:9px 16px;border-radius:8px;font-size:13.5px;font-weight:600;
+    display:inline-flex;align-items:center;gap:6px;transition:.15s ease;
+  }
+  .btn-primary{background:var(--brand);color:#fff;}
+  .btn-primary:hover{background:var(--brand-dark);}
+  .btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--brand);color:var(--brand-dark);}
+  .btn-danger-ghost{background:var(--surface);color:var(--danger);border:1px solid var(--line);}
+  .btn-danger-ghost:hover{border-color:var(--danger);}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px;
+  }
+  .toolbar input[type=text], .toolbar select{
+    padding:8px 12px;border:1px solid var(--line);border-radius:8px;
+    font-size:13.5px;background:var(--surface);color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .toolbar input[type=text]{width:240px;}
+  .toolbar .stats{
+    margin-left:auto;display:flex;gap:14px;font-size:12.5px;color:var(--ink-soft);
+    font-family:'JetBrains Mono',monospace;
+  }
+  .toolbar .stats b{color:var(--ink);font-weight:600;}
+
+  /* ---------- Board ---------- */
+  .board{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .column{
+    background:rgba(255,255,255,.5);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    display:flex;flex-direction:column;
+    min-height:200px;
+  }
+  .column-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 16px;border-bottom:1px solid var(--line);
+  }
+  .column-head .name{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .col-est .dot{background:var(--est);} .col-and .dot{background:var(--and);} .col-con .dot{background:var(--con);}
+  .count-pill{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:500;
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    padding:2px 9px;color:var(--ink-soft);
+  }
+  .col-body{padding:12px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:80px;}
+  .col-body.drag-over{background:var(--brand-light);border-radius:8px;}
+  .empty-hint{
+    text-align:center;color:var(--ink-soft);font-size:12.5px;padding:22px 8px;
+    border:1px dashed var(--line);border-radius:8px;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:9px;
+    padding:12px 13px;cursor:grab;position:relative;
+    box-shadow:0 1px 2px rgba(19,42,38,.04);
+    transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .card:hover{box-shadow:0 4px 14px rgba(19,42,38,.10);transform:translateY(-1px);}
+  .card.dragging{opacity:.4;}
+  .card .ref{
+    font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-soft);
+    letter-spacing:.04em;
+  }
+  .card h3{
+    font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;
+    margin:4px 0 8px;line-height:1.3;color:var(--ink);
+  }
+  .card-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .badge-resp{
+    display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--brand-dark);
+  }
+  .avatar{
+    width:19px;height:19px;border-radius:50%;background:var(--brand-light);color:var(--brand-dark);
+    display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .deadline{
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);
+    display:inline-flex;align-items:center;gap:4px;
+  }
+  .deadline.overdue{color:var(--danger);font-weight:600;}
+  .card p.progress{
+    margin:8px 0 0;font-size:11.5px;color:var(--ink-soft);line-height:1.4;
+    max-height:32px;overflow:hidden;text-overflow:ellipsis;
+  }
+  .status-strip{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:9px 0 0 9px;}
+  .col-est .status-strip, .card[data-status=estagnada] .status-strip{background:var(--est);}
+  .card[data-status=andamento] .status-strip{background:var(--and);}
+  .card[data-status=concluida] .status-strip{background:var(--con);}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(19,42,38,.45);display:none;
+    align-items:center;justify-content:center;z-index:50;padding:20px;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--surface);border-radius:12px;width:100%;max-width:520px;
+    padding:26px;max-height:88vh;overflow:auto;
+  }
+  .modal h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;text-transform:uppercase;letter-spacing:.03em;}
+  .field input[type=text], .field input[type=date], .field select, .field textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
+    font-family:'Inter',sans-serif;font-size:13.5px;color:var(--ink);background:#FCFDFD;
+  }
+  .field textarea{min-height:80px;resize:vertical;}
+  .modal-actions{display:flex;justify-content:space-between;margin-top:20px;gap:8px;}
+  .modal-actions .right{display:flex;gap:8px;}
+
+  /* ---------- Report ---------- */
+  .report-panel{
+    position:fixed;top:0;right:0;bottom:0;width:min(480px,100%);background:var(--surface);
+    box-shadow:-6px 0 24px rgba(19,42,38,.15);z-index:60;transform:translateX(100%);
+    transition:transform .25s ease;display:flex;flex-direction:column;
+  }
+  .report-panel.open{transform:translateX(0);}
+  .report-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .report-head h2{font-family:'Space Grotesk',sans-serif;font-size:17px;margin:0;}
+  .report-body{padding:20px 22px;overflow:auto;flex:1;}
+  .report-body h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin:18px 0 8px;}
+  .report-body h4:first-child{margin-top:0;}
+  .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12.5px;}
+  .bar-label{width:110px;flex-shrink:0;color:var(--ink-soft);}
+  .bar-track{flex:1;background:var(--bg);border-radius:6px;height:8px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;}
+  .bar-num{width:22px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;}
+  .overdue-item{
+    padding:8px 10px;background:var(--danger-bg);border-radius:7px;margin-bottom:6px;font-size:12px;
+    display:flex;justify-content:space-between;gap:8px;color:#7A241C;
+  }
+  .report-foot{padding:16px 22px;border-top:1px solid var(--line);display:flex;gap:8px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px;}
+  .kpi{background:var(--bg);border-radius:8px;padding:12px 10px;text-align:center;}
+  .kpi .n{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;}
+  .kpi .l{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;margin-top:2px;}
+
+  .backdrop{position:fixed;inset:0;background:rgba(19,42,38,.3);z-index:55;display:none;}
+  .backdrop.open{display:block;}
+
+  .toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;
+    opacity:0;transition:.25s ease;pointer-events:none;z-index:100;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media print{
+    body *{visibility:hidden;}
+    .report-panel, .report-panel *{visibility:visible;}
+    .report-panel{position:absolute;inset:0;transform:none;box-shadow:none;width:100%;}
+    .report-foot{display:none;}
+  }
+  @media (max-width:900px){
+    .board{grid-template-columns:1fr;}
+    .app{padding:20px 16px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="title-block">
+      <div class="eyebrow">Superintendência de Recursos Externos · Betim/MG</div>
+      <h1>KABAN de acompanhamento</h1>
+      <p>Gestão de tarefas, captações e convênios em andamento</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost" id="btnReport">📊 Gerar relatório</button>
+      <button class="btn btn-ghost" id="btnSave">⬇ Salvar cópia (.html)</button>
+      <button class="btn btn-primary" id="btnNew">+ Nova tarefa</button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="Buscar por tarefa, andamento...">
+    <select id="filterResp"><option value="">Todos responsáveis</option></select>
+    <div class="stats" id="topStats"></div>
+  </div>
+
+  <div class="board" id="board">
+    <div class="column col-est" data-status="estagnada">
+      <div class="column-head"><span class="name"><span class="dot"></span>Estagnada</span><span class="count-pill" data-count="estagnada">0</span></div>
+      <div class="col-body" data-status="estagnada"></div>
+    </div>
+    <div class="column col-and" data-status="andamento">
+      <div class="column-head"><span class="name"><span class="dot"></span>Em andamento</span><span class="count-pill" data-count="andamento">0</span></div>
+      <div class="col-body" data-status="andamento"></div>
+    </div>
+    <div class="column col-con" data-status="concluida">
+      <div class="column-head"><span class="name"><span class="dot"></span>Concluída</span><span class="count-pill" data-count="concluida">0</span></div>
+      <div class="col-body" data-status="concluida"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de tarefa -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle">Nova tarefa</h2>
+    <div class="field"><label>Tarefa</label><input type="text" id="fTitle"></div>
+    <div class="field"><label>Responsável</label><input type="text" id="fResp" list="respList"><datalist id="respList"></datalist></div>
+    <div class="field"><label>Prazo</label><input type="date" id="fDeadline"></div>
+    <div class="field"><label>Situação</label>
+      <select id="fStatus">
+        <option value="estagnada">Estagnada</option>
+        <option value="andamento">Em andamento</option>
+        <option value="concluida">Concluída</option>
+      </select>
+    </div>
+    <div class="field"><label>Andamento atual</label><textarea id="fProgress"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-danger-ghost" id="btnDelete" style="display:none;">Excluir</button>
+      <div class="right">
+        <button class="btn btn-ghost" id="btnCancel">Cancelar</button>
+        <button class="btn btn-primary" id="btnSaveTask">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Painel de relatório -->
+<div class="backdrop" id="backdrop"></div>
+<div class="report-panel" id="reportPanel">
+  <div class="report-head">
+    <h2>Relatório do quadro</h2>
+    <button class="btn btn-ghost" id="btnCloseReport">Fechar ✕</button>
+  </div>
+  <div class="report-body" id="reportBody"></div>
+  <div class="report-foot">
+    <button class="btn btn-ghost" id="btnExportCsv">Exportar CSV</button>
+    <button class="btn btn-primary" id="btnPrint">Imprimir / PDF</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script id="taskData" type="application/json">
+[
+ {"id":1,"title":"Chamado rastreabilidade","resp":"Eduarda","deadline":"2026-07-17","status":"andamento","progress":"O chamado está em fase de elaboração. Estou fazendo os ajustes pós terceira reunião com a Laura."},
+ {"id":2,"title":"Chamado transparência","resp":"Eduarda","deadline":"2026-07-10","status":"andamento","progress":"O chamado está praticamente pronto. Aguardando retorno da Compliance sobre os tópicos de localidade e beneficiário final."},
+ {"id":3,"title":"Captação SEPA","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","progress":"Verificar possibilidades de captação para as causas animais (castração, vacinação e educação prioritariamente). Possível via SEMENTE do Ministério Público."},
+ {"id":4,"title":"Captação SEMAS","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","progress":"Analisar se possui algum canal para captação relacionada à qualificação de profissionais para inserção no mercado de trabalho."},
+ {"id":5,"title":"Treinamento Câmara Municipal","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","progress":"Assistir aula gravada anterior do Recursos Externos com o Planejamento na Câmara Municipal para elaboração da apresentação."},
+ {"id":6,"title":"Organizar Drive Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","progress":""},
+ {"id":7,"title":"Organizar e-mail Wolney","resp":"Vinicius","deadline":"2026-08-09","status":"estagnada","progress":"Verificar se a TI já disponibilizou os arquivos."},
+ {"id":8,"title":"Organizar documentos Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","progress":""},
+ {"id":9,"title":"Analisar prestações caixa amarela","resp":"Natalia","deadline":"2026-07-10","status":"andamento","progress":""},
+ {"id":10,"title":"Plano de trabalho arboriza cidades","resp":"Cinthia","deadline":"2026-08-09","status":"concluida","progress":""},
+ {"id":11,"title":"Scannear planos de trabalho SMS","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","progress":""},
+ {"id":12,"title":"Elaborar nova planilha de emendas","resp":"Cinthia","deadline":"2026-08-09","status":"andamento","progress":""},
+ {"id":13,"title":"Captação Povos Warao","resp":"Eduarda","deadline":"2026-08-09","status":"andamento","progress":"Aguardando reunião ACNUR e retorno da VALE."},
+ {"id":14,"title":"Proposta: emenda 6880/2026 - SEME","resp":"Eduarda","deadline":"2026-07-15","status":"andamento","progress":"O pessoal da SEME está elaborando o plano de trabalho para inserção no SNEAELIS."},
+ {"id":15,"title":"Gestor responsável","resp":"Vinicius","deadline":"2026-07-15","status":"andamento","progress":"Levantamento inicial dos gestores responsáveis por cada emenda cadastrada, com coleta das datas de início e término da responsabilidade. Posteriormente inserido no ZEUS."},
+ {"id":16,"title":"Fonte do Convênio Convenente","resp":"Vinicius","deadline":"2026-08-31","status":"andamento","progress":"Lucas (SEGEFI) solicitou inserção da fonte dentro dos convênios; não há campo disponível. Aguardando Denise (ABACO) criar o campo."},
+ {"id":17,"title":"Acompanhamento dos programas TransfereGov","resp":"Cinthia","deadline":"2026-07-10","status":"andamento","progress":""}
+]
+</script>
+
+<script>
+let TASKS = JSON.parse(document.getElementById('taskData').textContent);
+let nextId = Math.max(...TASKS.map(t=>t.id), 0) + 1;
+let editingId = null;
+const STATUS_LABEL = {estagnada:'Estagnada', andamento:'Em andamento', concluida:'Concluída'};
+const STATUS_COLOR = {estagnada:'var(--est)', andamento:'var(--and)', concluida:'var(--con)'};
+
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(iso){
+  if(!iso) return '—';
+  const [y,m,d]=iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+function initials(name){
+  return name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function populateFilters(){
+  const resp = [...new Set(TASKS.map(t=>t.resp).filter(Boolean))].sort();
+  const sel = document.getElementById('filterResp');
+  sel.innerHTML = '<option value="">Todos responsáveis</option>' + resp.map(r=>`<option value="${r}">${r}</option>`).join('');
+  document.getElementById('respList').innerHTML = resp.map(r=>`<option value="${r}">`).join('');
+}
+
+function render(){
+  const search = document.getElementById('search').value.toLowerCase();
+  const respFilter = document.getElementById('filterResp').value;
+  ['estagnada','andamento','concluida'].forEach(st=>{
+    const body = document.querySelector(`.col-body[data-status=${st}]`);
+    body.innerHTML='';
+    const items = TASKS.filter(t=>t.status===st)
+      .filter(t=> !respFilter || t.resp===respFilter)
+      .filter(t=> !search || (t.title+t.progress+t.resp).toLowerCase().includes(search));
+    document.querySelector(`.count-pill[data-count=${st}]`).textContent = TASKS.filter(t=>t.status===st).length;
+    if(items.length===0){
+      body.innerHTML = `<div class="empty-hint">Nenhuma tarefa aqui</div>`;
+      return;
+    }
+    items.forEach(t=>{
+      const overdue = t.deadline && t.deadline < todayISO() && t.status!=='concluida';
+      const card = document.createElement('div');
+      card.className='card'; card.draggable=true; card.dataset.id=t.id; card.dataset.status=t.status;
+      card.innerHTML = `
+        <div class="status-strip"></div>
+        <div class="ref">TAR-${String(t.id).padStart(3,'0')}</div>
+        <h3>${t.title}</h3>
+        <div class="card-meta">
+          <span class="badge-resp"><span class="avatar">${initials(t.resp||'?')}</span>${t.resp||'—'}</span>
+          <span class="deadline ${overdue?'overdue':''}">${overdue?'⚠ ':''}${fmtDate(t.deadline)}</span>
+        </div>
+        ${t.progress ? `<p class="progress">${t.progress}</p>` : ''}
+      `;
+      card.addEventListener('click', ()=>openModal(t.id));
+      card.addEventListener('dragstart', e=>{ card.classList.add('dragging'); e.dataTransfer.setData('text/plain', t.id); });
+      card.addEventListener('dragend', ()=> card.classList.remove('dragging'));
+      body.appendChild(card);
+    });
+  });
+  const total = TASKS.length;
+  const overdueCount = TASKS.filter(t=>t.deadline && t.deadline<todayISO() && t.status!=='concluida').length;
+  document.getElementById('topStats').innerHTML =
+    `<span><b>${total}</b> tarefas</span><span><b>${overdueCount}</b> atrasadas</span>`;
+}
+
+document.querySelectorAll('.col-body').forEach(body=>{
+  body.addEventListener('dragover', e=>{ e.preventDefault(); body.classList.add('drag-over'); });
+  body.addEventListener('dragleave', ()=> body.classList.remove('drag-over'));
+  body.addEventListener('drop', e=>{
+    e.preventDefault(); body.classList.remove('drag-over');
+    const id = Number(e.dataTransfer.getData('text/plain'));
+    const task = TASKS.find(t=>t.id===id);
+    if(task){ task.status = body.dataset.status; render(); showToast(`Tarefa movida para "${STATUS_LABEL[task.status]}"`); }
+  });
+});
+
+function openModal(id){
+  editingId = id;
+  const overlay = document.getElementById('overlay');
+  document.getElementById('btnDelete').style.display = id ? 'inline-flex' : 'none';
+  if(id){
+    const t = TASKS.find(t=>t.id===id);
+    document.getElementById('modalTitle').textContent = 'Editar tarefa';
+    document.getElementById('fTitle').value = t.title;
+    document.getElementById('fResp').value = t.resp;
+    document.getElementById('fDeadline').value = t.deadline;
+    document.getElementById('fStatus').value = t.status;
+    document.getElementById('fProgress').value = t.progress;
+  } else {
+    document.getElementById('modalTitle').textContent = 'Nova tarefa';
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fResp').value = '';
+    document.getElementById('fDeadline').value = '';
+    document.getElementById('fStatus').value = 'andamento';
+    document.getElementById('fProgress').value = '';
+  }
+  overlay.classList.add('open');
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); editingId=null; }
+
+document.getElementById('btnNew').addEventListener('click', ()=>openModal(null));
+document.getElementById('btnCancel').addEventListener('click', closeModal);
+document.getElementById('overlay').addEventListener('click', e=>{ if(e.target.id==='overlay') closeModal(); });
+
+document.getElementById('btnSaveTask').addEventListener('click', ()=>{
+  const title = document.getElementById('fTitle').value.trim();
+  if(!title){ showToast('Informe o nome da tarefa'); return; }
+  const data = {
+    title,
+    resp: document.getElementById('fResp').value.trim(),
+    deadline: document.getElementById('fDeadline').value,
+    status: document.getElementById('fStatus').value,
+    progress: document.getElementById('fProgress').value.trim()
+  };
+  if(editingId){
+    Object.assign(TASKS.find(t=>t.id===editingId), data);
+    showToast('Tarefa atualizada');
+  } else {
+    TASKS.push({id: nextId++, ...data});
+    showToast('Tarefa criada');
+  }
+  populateFilters(); render(); closeModal();
+});
+document.getElementById('btnDelete').addEventListener('click', ()=>{
+  TASKS = TASKS.filter(t=>t.id!==editingId);
+  populateFilters(); render(); closeModal();
+  showToast('Tarefa excluída');
+});
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('filterResp').addEventListener('change', render);
+
+/* ---------- Relatório ---------- */
+function buildReport(){
+  const total = TASKS.length;
+  const byStatus = {estagnada:0,andamento:0,concluida:0};
+  TASKS.forEach(t=>byStatus[t.status]++);
+  const byResp = {};
+  TASKS.forEach(t=>{ const r=t.resp||'Sem responsável'; byResp[r]=(byResp[r]||0)+1; });
+  const overdue = TASKS.filter(t=>t.deadline && t.deadline<todayISO() && t.status!=='concluida')
+    .sort((a,b)=>a.deadline.localeCompare(b.deadline));
+
+  let html = `<div class="kpi-grid">
+    <div class="kpi"><div class="n">${total}</div><div class="l">Total</div></div>
+    <div class="kpi"><div class="n">${byStatus.andamento}</div><div class="l">Em andamento</div></div>
+    <div class="kpi"><div class="n">${overdue.length}</div><div class="l">Atrasadas</div></div>
+  </div>`;
+
+  html += `<h4>Por situação</h4>`;
+  Object.keys(STATUS_LABEL).forEach(st=>{
+    const pct = total ? Math.round(byStatus[st]/total*100) : 0;
+    html += `<div class="bar-row"><span class="bar-label">${STATUS_LABEL[st]}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:${STATUS_COLOR[st]}"></span></span>
+      <span class="bar-num">${byStatus[st]}</span></div>`;
+  });
+
+  html += `<h4>Por responsável</h4>`;
+  Object.entries(byResp).sort((a,b)=>b[1]-a[1]).forEach(([r,n])=>{
+    const pct = total ? Math.round(n/total*100) : 0;
+    html += `<div class="bar-row"><span class="bar-label">${r}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:var(--brand)"></span></span>
+      <span class="bar-num">${n}</span></div>`;
+  });
+
+  html += `<h4>Tarefas atrasadas (${overdue.length})</h4>`;
+  if(overdue.length===0){
+    html += `<div style="font-size:12.5px;color:var(--ink-soft);">Nenhuma tarefa atrasada. 🎉</div>`;
+  } else {
+    overdue.forEach(t=>{
+      html += `<div class="overdue-item"><span>${t.title} — ${t.resp||'—'}</span><span>${fmtDate(t.deadline)}</span></div>`;
+    });
+  }
+
+  html += `<h4>Gerado em</h4><div style="font-size:12.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;">${new Date().toLocaleString('pt-BR')}</div>`;
+
+  document.getElementById('reportBody').innerHTML = html;
+}
+document.getElementById('btnReport').addEventListener('click', ()=>{
+  buildReport();
+  document.getElementById('reportPanel').classList.add('open');
+  document.getElementById('backdrop').classList.add('open');
+});
+function closeReport(){
+  document.getElementById('reportPanel').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('open');
+}
+document.getElementById('btnCloseReport').addEventListener('click', closeReport);
+document.getElementById('backdrop').addEventListener('click', closeReport);
+document.getElementById('btnPrint').addEventListener('click', ()=> window.print());
+
+document.getElementById('btnExportCsv').addEventListener('click', ()=>{
+  const rows = [['Ref','Tarefa','Responsável','Prazo','Situação','Andamento atual']];
+  TASKS.forEach(t=> rows.push([`TAR-${String(t.id).padStart(3,'0')}`, t.title, t.resp, fmtDate(t.deadline), STATUS_LABEL[t.status], (t.progress||'').replace(/\n/g,' ')]));
+  const csv = rows.map(r=> r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `relatorio-recursos-externos-${todayISO()}.csv`;
+  a.click();
+  showToast('CSV exportado');
+});
+
+/* ---------- Salvar cópia atualizada (.html) para reenviar ao Google Drive ---------- */
+document.getElementById('btnSave').addEventListener('click', ()=>{
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelector('#taskData').textContent = JSON.stringify(TASKS, null, 1);
+  clone.querySelector('.overlay').classList.remove('open');
+  clone.querySelector('.report-panel').classList.remove('open');
+  clone.querySelector('.backdrop').classList.remove('open');
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'kanban-recursos-externos.html';
+  a.click();
+  showToast('Arquivo salvo — envie ao Google Drive para atualizar');
+});
+
+populateFilters();
+render();
+</script>
+</body>
+</html>
