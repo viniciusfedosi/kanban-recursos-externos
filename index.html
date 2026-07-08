@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recursos Externos</title>
+<title>Recursos Externos · Quadro Kanban</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -24,6 +24,12 @@
     --con-bg:#E5F5EC;
     --danger:#C0362C;
     --danger-bg:#FBEAE8;
+    --pr-alta:#B91C1C;
+    --pr-alta-bg:#FCE8E7;
+    --pr-media:#B45309;
+    --pr-media-bg:#FDF1DF;
+    --pr-baixa:#3F6212;
+    --pr-baixa-bg:#EFF5E1;
     --radius:10px;
   }
   *{box-sizing:border-box;}
@@ -127,7 +133,24 @@
   .card .ref{
     font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-soft);
     letter-spacing:.04em;
+    display:flex;align-items:center;justify-content:space-between;gap:6px;
   }
+  .pr-badge{
+    font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+    padding:2px 7px;border-radius:20px;letter-spacing:.02em;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:4px;
+  }
+  .pr-badge::before{content:'';width:6px;height:6px;border-radius:50%;display:inline-block;}
+  .pr-alta{color:var(--pr-alta);background:var(--pr-alta-bg);}
+  .pr-alta::before{background:var(--pr-alta);}
+  .pr-media{color:var(--pr-media);background:var(--pr-media-bg);}
+  .pr-media::before{background:var(--pr-media);}
+  .pr-baixa{color:var(--pr-baixa);background:var(--pr-baixa-bg);}
+  .pr-baixa::before{background:var(--pr-baixa);}
+  .card[data-priority=alta]{border-left:3px solid var(--pr-alta);}
+  .card[data-priority=media]{border-left:3px solid var(--pr-media);}
+  .card[data-priority=baixa]{border-left:3px solid var(--pr-baixa);}
+  .card .status-strip{display:none;}
   .card h3{
     font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;
     margin:4px 0 8px;line-height:1.3;color:var(--ink);
@@ -231,7 +254,7 @@
   <header class="topbar">
     <div class="title-block">
       <div class="eyebrow">Superintendência de Recursos Externos · Betim/MG</div>
-      <h1>KABAN de acompanhamento</h1>
+      <h1>Quadro de Acompanhamento</h1>
       <p>Gestão de tarefas, captações e convênios em andamento</p>
     </div>
     <div class="header-actions">
@@ -244,6 +267,12 @@
   <div class="toolbar">
     <input type="text" id="search" placeholder="Buscar por tarefa, andamento...">
     <select id="filterResp"><option value="">Todos responsáveis</option></select>
+    <select id="filterPriority">
+      <option value="">Todas prioridades</option>
+      <option value="alta">Alta</option>
+      <option value="media">Média</option>
+      <option value="baixa">Baixa</option>
+    </select>
     <div class="stats" id="topStats"></div>
   </div>
 
@@ -270,6 +299,13 @@
     <div class="field"><label>Tarefa</label><input type="text" id="fTitle"></div>
     <div class="field"><label>Responsável</label><input type="text" id="fResp" list="respList"><datalist id="respList"></datalist></div>
     <div class="field"><label>Prazo</label><input type="date" id="fDeadline"></div>
+    <div class="field"><label>Prioridade</label>
+      <select id="fPriority">
+        <option value="alta">Alta</option>
+        <option value="media">Média</option>
+        <option value="baixa">Baixa</option>
+      </select>
+    </div>
     <div class="field"><label>Situação</label>
       <select id="fStatus">
         <option value="estagnada">Estagnada</option>
@@ -306,23 +342,23 @@
 
 <script id="taskData" type="application/json">
 [
- {"id":1,"title":"Chamado rastreabilidade","resp":"Eduarda","deadline":"2026-07-17","status":"andamento","progress":"O chamado está em fase de elaboração. Estou fazendo os ajustes pós terceira reunião com a Laura."},
- {"id":2,"title":"Chamado transparência","resp":"Eduarda","deadline":"2026-07-10","status":"andamento","progress":"O chamado está praticamente pronto. Aguardando retorno da Compliance sobre os tópicos de localidade e beneficiário final."},
- {"id":3,"title":"Captação SEPA","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","progress":"Verificar possibilidades de captação para as causas animais (castração, vacinação e educação prioritariamente). Possível via SEMENTE do Ministério Público."},
- {"id":4,"title":"Captação SEMAS","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","progress":"Analisar se possui algum canal para captação relacionada à qualificação de profissionais para inserção no mercado de trabalho."},
- {"id":5,"title":"Treinamento Câmara Municipal","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","progress":"Assistir aula gravada anterior do Recursos Externos com o Planejamento na Câmara Municipal para elaboração da apresentação."},
- {"id":6,"title":"Organizar Drive Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","progress":""},
- {"id":7,"title":"Organizar e-mail Wolney","resp":"Vinicius","deadline":"2026-08-09","status":"estagnada","progress":"Verificar se a TI já disponibilizou os arquivos."},
- {"id":8,"title":"Organizar documentos Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","progress":""},
- {"id":9,"title":"Analisar prestações caixa amarela","resp":"Natalia","deadline":"2026-07-10","status":"andamento","progress":""},
- {"id":10,"title":"Plano de trabalho arboriza cidades","resp":"Cinthia","deadline":"2026-08-09","status":"concluida","progress":""},
- {"id":11,"title":"Scannear planos de trabalho SMS","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","progress":""},
- {"id":12,"title":"Elaborar nova planilha de emendas","resp":"Cinthia","deadline":"2026-08-09","status":"andamento","progress":""},
- {"id":13,"title":"Captação Povos Warao","resp":"Eduarda","deadline":"2026-08-09","status":"andamento","progress":"Aguardando reunião ACNUR e retorno da VALE."},
- {"id":14,"title":"Proposta: emenda 6880/2026 - SEME","resp":"Eduarda","deadline":"2026-07-15","status":"andamento","progress":"O pessoal da SEME está elaborando o plano de trabalho para inserção no SNEAELIS."},
- {"id":15,"title":"Gestor responsável","resp":"Vinicius","deadline":"2026-07-15","status":"andamento","progress":"Levantamento inicial dos gestores responsáveis por cada emenda cadastrada, com coleta das datas de início e término da responsabilidade. Posteriormente inserido no ZEUS."},
- {"id":16,"title":"Fonte do Convênio Convenente","resp":"Vinicius","deadline":"2026-08-31","status":"andamento","progress":"Lucas (SEGEFI) solicitou inserção da fonte dentro dos convênios; não há campo disponível. Aguardando Denise (ABACO) criar o campo."},
- {"id":17,"title":"Acompanhamento dos programas TransfereGov","resp":"Cinthia","deadline":"2026-07-10","status":"andamento","progress":""}
+ {"id":1,"title":"Chamado rastreabilidade","resp":"Eduarda","deadline":"2026-07-17","status":"andamento","priority":"alta","progress":"O chamado está em fase de elaboração. Estou fazendo os ajustes pós terceira reunião com a Laura."},
+ {"id":2,"title":"Chamado transparência","resp":"Eduarda","deadline":"2026-07-10","status":"andamento","priority":"alta","progress":"O chamado está praticamente pronto. Aguardando retorno da Compliance sobre os tópicos de localidade e beneficiário final."},
+ {"id":3,"title":"Captação SEPA","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","priority":"media","progress":"Verificar possibilidades de captação para as causas animais (castração, vacinação e educação prioritariamente). Possível via SEMENTE do Ministério Público."},
+ {"id":4,"title":"Captação SEMAS","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","priority":"baixa","progress":"Analisar se possui algum canal para captação relacionada à qualificação de profissionais para inserção no mercado de trabalho."},
+ {"id":5,"title":"Treinamento Câmara Municipal","resp":"Eduarda","deadline":"2026-08-31","status":"estagnada","priority":"baixa","progress":"Assistir aula gravada anterior do Recursos Externos com o Planejamento na Câmara Municipal para elaboração da apresentação."},
+ {"id":6,"title":"Organizar Drive Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","priority":"baixa","progress":""},
+ {"id":7,"title":"Organizar e-mail Wolney","resp":"Vinicius","deadline":"2026-08-09","status":"estagnada","priority":"media","progress":"Verificar se a TI já disponibilizou os arquivos."},
+ {"id":8,"title":"Organizar documentos Wolney","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","priority":"baixa","progress":""},
+ {"id":9,"title":"Analisar prestações caixa amarela","resp":"Natalia","deadline":"2026-07-10","status":"andamento","priority":"media","progress":""},
+ {"id":10,"title":"Plano de trabalho arboriza cidades","resp":"Cinthia","deadline":"2026-08-09","status":"concluida","priority":"baixa","progress":""},
+ {"id":11,"title":"Scannear planos de trabalho SMS","resp":"Cinthia","deadline":"2026-08-09","status":"estagnada","priority":"baixa","progress":""},
+ {"id":12,"title":"Elaborar nova planilha de emendas","resp":"Cinthia","deadline":"2026-08-09","status":"andamento","priority":"media","progress":""},
+ {"id":13,"title":"Captação Povos Warao","resp":"Eduarda","deadline":"2026-08-09","status":"andamento","priority":"alta","progress":"Aguardando reunião ACNUR e retorno da VALE."},
+ {"id":14,"title":"Proposta: emenda 6880/2026 - SEME","resp":"Eduarda","deadline":"2026-07-15","status":"andamento","priority":"alta","progress":"O pessoal da SEME está elaborando o plano de trabalho para inserção no SNEAELIS."},
+ {"id":15,"title":"Gestor responsável","resp":"Vinicius","deadline":"2026-07-15","status":"andamento","priority":"alta","progress":"Levantamento inicial dos gestores responsáveis por cada emenda cadastrada, com coleta das datas de início e término da responsabilidade. Posteriormente inserido no ZEUS."},
+ {"id":16,"title":"Fonte do Convênio Convenente","resp":"Vinicius","deadline":"2026-08-31","status":"andamento","priority":"media","progress":"Lucas (SEGEFI) solicitou inserção da fonte dentro dos convênios; não há campo disponível. Aguardando Denise (ABACO) criar o campo."},
+ {"id":17,"title":"Acompanhamento dos programas TransfereGov","resp":"Cinthia","deadline":"2026-07-10","status":"andamento","priority":"media","progress":""}
 ]
 </script>
 
@@ -332,6 +368,9 @@ let nextId = Math.max(...TASKS.map(t=>t.id), 0) + 1;
 let editingId = null;
 const STATUS_LABEL = {estagnada:'Estagnada', andamento:'Em andamento', concluida:'Concluída'};
 const STATUS_COLOR = {estagnada:'var(--est)', andamento:'var(--and)', concluida:'var(--con)'};
+const PRIORITY_LABEL = {alta:'Alta', media:'Média', baixa:'Baixa'};
+const PRIORITY_COLOR = {alta:'var(--pr-alta)', media:'var(--pr-media)', baixa:'var(--pr-baixa)'};
+const PRIORITY_RANK = {alta:0, media:1, baixa:2};
 
 function todayISO(){ return new Date().toISOString().slice(0,10); }
 function fmtDate(iso){
@@ -358,12 +397,15 @@ function populateFilters(){
 function render(){
   const search = document.getElementById('search').value.toLowerCase();
   const respFilter = document.getElementById('filterResp').value;
+  const priorityFilter = document.getElementById('filterPriority').value;
   ['estagnada','andamento','concluida'].forEach(st=>{
     const body = document.querySelector(`.col-body[data-status=${st}]`);
     body.innerHTML='';
     const items = TASKS.filter(t=>t.status===st)
       .filter(t=> !respFilter || t.resp===respFilter)
-      .filter(t=> !search || (t.title+t.progress+t.resp).toLowerCase().includes(search));
+      .filter(t=> !priorityFilter || t.priority===priorityFilter)
+      .filter(t=> !search || (t.title+t.progress+t.resp).toLowerCase().includes(search))
+      .sort((a,b)=> (PRIORITY_RANK[a.priority]??3) - (PRIORITY_RANK[b.priority]??3) || (a.deadline||'9999').localeCompare(b.deadline||'9999'));
     document.querySelector(`.count-pill[data-count=${st}]`).textContent = TASKS.filter(t=>t.status===st).length;
     if(items.length===0){
       body.innerHTML = `<div class="empty-hint">Nenhuma tarefa aqui</div>`;
@@ -372,10 +414,12 @@ function render(){
     items.forEach(t=>{
       const overdue = t.deadline && t.deadline < todayISO() && t.status!=='concluida';
       const card = document.createElement('div');
-      card.className='card'; card.draggable=true; card.dataset.id=t.id; card.dataset.status=t.status;
+      card.className='card'; card.draggable=true; card.dataset.id=t.id; card.dataset.status=t.status; card.dataset.priority=t.priority||'';
       card.innerHTML = `
-        <div class="status-strip"></div>
-        <div class="ref">TAR-${String(t.id).padStart(3,'0')}</div>
+        <div class="ref">
+          <span>TAR-${String(t.id).padStart(3,'0')}</span>
+          <span class="pr-badge pr-${t.priority||'baixa'}">${PRIORITY_LABEL[t.priority]||'—'}</span>
+        </div>
         <h3>${t.title}</h3>
         <div class="card-meta">
           <span class="badge-resp"><span class="avatar">${initials(t.resp||'?')}</span>${t.resp||'—'}</span>
@@ -391,8 +435,9 @@ function render(){
   });
   const total = TASKS.length;
   const overdueCount = TASKS.filter(t=>t.deadline && t.deadline<todayISO() && t.status!=='concluida').length;
+  const altaCount = TASKS.filter(t=>t.priority==='alta').length;
   document.getElementById('topStats').innerHTML =
-    `<span><b>${total}</b> tarefas</span><span><b>${overdueCount}</b> atrasadas</span>`;
+    `<span><b>${total}</b> tarefas</span><span><b>${altaCount}</b> prioridade alta</span><span><b>${overdueCount}</b> atrasadas</span>`;
 }
 
 document.querySelectorAll('.col-body').forEach(body=>{
@@ -417,6 +462,7 @@ function openModal(id){
     document.getElementById('fResp').value = t.resp;
     document.getElementById('fDeadline').value = t.deadline;
     document.getElementById('fStatus').value = t.status;
+    document.getElementById('fPriority').value = t.priority||'media';
     document.getElementById('fProgress').value = t.progress;
   } else {
     document.getElementById('modalTitle').textContent = 'Nova tarefa';
@@ -424,6 +470,7 @@ function openModal(id){
     document.getElementById('fResp').value = '';
     document.getElementById('fDeadline').value = '';
     document.getElementById('fStatus').value = 'andamento';
+    document.getElementById('fPriority').value = 'media';
     document.getElementById('fProgress').value = '';
   }
   overlay.classList.add('open');
@@ -442,6 +489,7 @@ document.getElementById('btnSaveTask').addEventListener('click', ()=>{
     resp: document.getElementById('fResp').value.trim(),
     deadline: document.getElementById('fDeadline').value,
     status: document.getElementById('fStatus').value,
+    priority: document.getElementById('fPriority').value,
     progress: document.getElementById('fProgress').value.trim()
   };
   if(editingId){
@@ -461,6 +509,7 @@ document.getElementById('btnDelete').addEventListener('click', ()=>{
 
 document.getElementById('search').addEventListener('input', render);
 document.getElementById('filterResp').addEventListener('change', render);
+document.getElementById('filterPriority').addEventListener('change', render);
 
 /* ---------- Relatório ---------- */
 function buildReport(){
@@ -470,12 +519,13 @@ function buildReport(){
   const byResp = {};
   TASKS.forEach(t=>{ const r=t.resp||'Sem responsável'; byResp[r]=(byResp[r]||0)+1; });
   const overdue = TASKS.filter(t=>t.deadline && t.deadline<todayISO() && t.status!=='concluida')
-    .sort((a,b)=>a.deadline.localeCompare(b.deadline));
+    .sort((a,b)=> (PRIORITY_RANK[a.priority]??3)-(PRIORITY_RANK[b.priority]??3) || a.deadline.localeCompare(b.deadline));
 
+  const altaCount = TASKS.filter(t=>t.priority==='alta').length;
   let html = `<div class="kpi-grid">
     <div class="kpi"><div class="n">${total}</div><div class="l">Total</div></div>
-    <div class="kpi"><div class="n">${byStatus.andamento}</div><div class="l">Em andamento</div></div>
-    <div class="kpi"><div class="n">${overdue.length}</div><div class="l">Atrasadas</div></div>
+    <div class="kpi"><div class="n" style="color:var(--pr-alta)">${altaCount}</div><div class="l">Prioridade alta</div></div>
+    <div class="kpi"><div class="n" style="color:var(--danger)">${overdue.length}</div><div class="l">Atrasadas</div></div>
   </div>`;
 
   html += `<h4>Por situação</h4>`;
@@ -484,6 +534,16 @@ function buildReport(){
     html += `<div class="bar-row"><span class="bar-label">${STATUS_LABEL[st]}</span>
       <span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:${STATUS_COLOR[st]}"></span></span>
       <span class="bar-num">${byStatus[st]}</span></div>`;
+  });
+
+  const byPriority = {alta:0, media:0, baixa:0};
+  TASKS.forEach(t=> byPriority[t.priority||'baixa']++);
+  html += `<h4>Por prioridade</h4>`;
+  Object.keys(PRIORITY_LABEL).forEach(p=>{
+    const pct = total ? Math.round(byPriority[p]/total*100) : 0;
+    html += `<div class="bar-row"><span class="bar-label">${PRIORITY_LABEL[p]}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${pct}%;background:${PRIORITY_COLOR[p]}"></span></span>
+      <span class="bar-num">${byPriority[p]}</span></div>`;
   });
 
   html += `<h4>Por responsável</h4>`;
@@ -499,7 +559,7 @@ function buildReport(){
     html += `<div style="font-size:12.5px;color:var(--ink-soft);">Nenhuma tarefa atrasada. 🎉</div>`;
   } else {
     overdue.forEach(t=>{
-      html += `<div class="overdue-item"><span>${t.title} — ${t.resp||'—'}</span><span>${fmtDate(t.deadline)}</span></div>`;
+      html += `<div class="overdue-item"><span>[${PRIORITY_LABEL[t.priority]||'—'}] ${t.title} — ${t.resp||'—'}</span><span>${fmtDate(t.deadline)}</span></div>`;
     });
   }
 
@@ -521,8 +581,9 @@ document.getElementById('backdrop').addEventListener('click', closeReport);
 document.getElementById('btnPrint').addEventListener('click', ()=> window.print());
 
 document.getElementById('btnExportCsv').addEventListener('click', ()=>{
-  const rows = [['Ref','Tarefa','Responsável','Prazo','Situação','Andamento atual']];
-  TASKS.forEach(t=> rows.push([`TAR-${String(t.id).padStart(3,'0')}`, t.title, t.resp, fmtDate(t.deadline), STATUS_LABEL[t.status], (t.progress||'').replace(/\n/g,' ')]));
+  const rows = [['Ref','Tarefa','Responsável','Prioridade','Prazo','Situação','Andamento atual']];
+  [...TASKS].sort((a,b)=> (PRIORITY_RANK[a.priority]??3)-(PRIORITY_RANK[b.priority]??3) || (a.deadline||'9999').localeCompare(b.deadline||'9999'))
+    .forEach(t=> rows.push([`TAR-${String(t.id).padStart(3,'0')}`, t.title, t.resp, PRIORITY_LABEL[t.priority]||'—', fmtDate(t.deadline), STATUS_LABEL[t.status], (t.progress||'').replace(/\n/g,' ')]));
   const csv = rows.map(r=> r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n');
   const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
